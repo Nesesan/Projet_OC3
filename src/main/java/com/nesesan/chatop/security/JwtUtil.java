@@ -15,7 +15,6 @@ import java.util.function.Function;
  * Provides methods for generating, validating, and extracting information
  * from JWT tokens. The tokens are signed using the HMAC SHA key derived
  * from a secret key.
- *
  * This class is a Spring Component and can be used for authentication
  * and security purposes in a Spring application.
  */
