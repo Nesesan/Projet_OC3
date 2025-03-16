@@ -28,7 +28,7 @@ public class AuthController {
 
     @GetMapping("/me")
     public ResponseEntity<?> me (String email) {
-        User user = userService.getUserByEmail(email);
+        User user = userService.findByEmail(email);
         return ResponseEntity.ok(user);
     }
 }

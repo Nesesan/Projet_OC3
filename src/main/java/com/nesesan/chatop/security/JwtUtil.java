@@ -1,4 +1,4 @@
-package com.nesesan.chatop.service.security;
+package com.nesesan.chatop.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -10,6 +10,14 @@ import java.security.Key;
 import java.util.Date;
 import java.util.function.Function;
 
+/**
+ * Utility class for handling JSON Web Tokens (JWT).
+ * Provides methods for generating, validating, and extracting information
+ * from JWT tokens. The tokens are signed using the HMAC SHA key derived
+ * from a secret key.
+ * This class is a Spring Component and can be used for authentication
+ * and security purposes in a Spring application.
+ */
 @Component
 public class JwtUtil {
     @Value( "${jwt.secret}")
