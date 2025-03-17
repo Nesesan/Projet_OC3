@@ -39,21 +39,21 @@ public class RentalService {
         if (userEmail == null || userEmail.isEmpty()) {
             throw new Exception("User not found");
         }
-        User user = userService.findByEmail(userEmail);
+       // User user = userService.findByEmail(userEmail);
 
-        Rental newRental = new Rental();
-        newRental.setName(rental.getName());
-        newRental.setSurface(rental.getSurface());
-        newRental.setPrice(rental.getPrice());
-        newRental.setDescription(rental.getDescription());
-        newRental.setOwnerId(user.getId());
-        newRental.setCreatedAt(newRental.getCreatedAt());
-        newRental.setUpdatedAt(newRental.getUpdatedAt());
-
-        if (newRental.getPicture() != null && !newRental.getPicture().isEmpty()) {
-            String pictureUrl = cloudinaryService.uploadFile(newRental.getPicture());
-            newRental.setPicture(pictureUrl);
-        }
+//        Rental newRental = new Rental();
+//        newRental.setName(rental.getName());
+//        newRental.setSurface(rental.getSurface());
+//        newRental.setPrice(rental.getPrice());
+//        newRental.setDescription(rental.getDescription());
+//        newRental.setOwnerId(user.getId());
+//        newRental.setCreatedAt(newRental.getCreatedAt());
+//        newRental.setUpdatedAt(newRental.getUpdatedAt());
+//
+////        if (newRental.getPicture() != null && !newRental.getPicture().isEmpty()) {
+//            String pictureUrl = cloudinaryService.uploadFile(newRental.getPicture());
+//            newRental.setPicture(pictureUrl);
+//        }
 
         return rentalRepository.save(rental);
     };

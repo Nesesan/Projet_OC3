@@ -7,6 +7,7 @@ import com.nesesan.chatop.repository.MessageRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class MessageService {
@@ -33,12 +34,12 @@ public class MessageService {
         Rental rental =  rentalService.getRentalById(message.getRentalId())
                 .orElseThrow(()-> new IllegalArgumentException("Rental not found"));
 
-        User user = userService.findByEmail(userEmail);
+        Optional<User> user = userService.findByEmail(userEmail);
 
         Message newMessage = new Message();
         message.setRentalId(rental.getId());
         message.setMessage(message.getMessage());
-        message.setUserId(user.getId());
+        //message.setUserId(user.getId());
 
         Message savedMessage = sendMessage(newMessage);
         return newMessage;

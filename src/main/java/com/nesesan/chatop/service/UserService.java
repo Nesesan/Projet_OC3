@@ -1,8 +1,9 @@
 package com.nesesan.chatop.service;
 
+import com.nesesan.chatop.dto.authentication.UserRegisterDTO;
+import com.nesesan.chatop.dto.user.UserDTO;
 import com.nesesan.chatop.model.User;
 import com.nesesan.chatop.repository.UserRepository;
-import com.nesesan.chatop.response.UserResponse;
 import com.nesesan.chatop.security.JwtUtil;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -33,28 +34,25 @@ public class UserService implements UserDetailsService {
         return userRepository.findById(id).orElse(null);
     }
 
-    public User findByEmail(String email){
-        return userRepository.findByEmail(email).orElse(null);
+    public Optional<User> findByEmail(String email){
+        return userRepository.findByEmail(email);
     }
 
-    public String registerUser(User user) {
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+    public String registerUser(UserRegisterDTO registerDTO) {
+        if (userRepository.findByEmail(registerDTO.getEmail()).isPresent()) {
             throw new IllegalArgumentException("Email already in use");
         }
-
-        User newUser = new User();
-        newUser.setName(user.getName());
-        newUser.setEmail(user.getEmail());
-        newUser.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(newUser);
-
-
+        User user = new User();
+        user.setName(registerDTO.getName());
+        user.setEmail(registerDTO.getEmail());
+        user.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
+        userRepository.save(user);
         return jwtUtil.generateToken(user.getEmail());
     }
 
     public String loginUser(String login, String password) {
-        Optional<User> optionalUser = userRepository.findByEmail(login);
-        if (optionalUser.isEmpty() || !passwordEncoder.matches(password, optionalUser.get().getPassword())) {
+        Optional<User> userOptional = userRepository.findByEmail(login);
+        if (userOptional.isEmpty() || !passwordEncoder.matches(password, userOptional.get().getPassword())) {
             throw new IllegalArgumentException("Invalid credentials");
         }
         return jwtUtil.generateToken(login);
@@ -63,39 +61,24 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> optionalUser = userRepository.findByEmail(username);
-        if (optionalUser.isEmpty()) {
-            throw new UsernameNotFoundException("User not found" + username);
+        Optional<User> userOptional = userRepository.findByEmail(username);
+        if (userOptional.isEmpty()) {
+            throw new UsernameNotFoundException("User not found with email: " + username);
         }
-        User user = optionalUser.get();
+        User user = userOptional.get();
         return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), new ArrayList<>());
     }
 
-    public User getUserByEmail(String email) {
-        return userRepository.findByEmail(email)
+    public UserDTO getUserDTOByEmail(String email) {
+        User user = findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return new UserDTO(Math.toIntExact(user.getId()), user.getName(), user.getEmail(),
+                user.getCreatedAt(), user.getUpdatedAt());
     }
-
-    public UserResponse getUserByToken(String token) {
-        if (token == null || !token.startsWith("Bearer ")) {
-            throw new IllegalArgumentException("Invalid token");
-        }
-        token = token.substring(7); // Supprimer "Bearer "
-        String email = jwtUtil.extractUsername(token);
-
-        User user = getUserByEmail(email);
-
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found");
-        }
-
-        return new UserResponse(
-                user.getId(),
-                user.getName(),
-                user.getEmail(),
-                user.getCreatedAt(),
-                user.getUpdatedAt()
-        );
+    public UserDTO getUserDTOById(Integer id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + id));
+        return new UserDTO(Math.toIntExact(user.getId()), user.getName(), user.getEmail(), user.getCreatedAt(), user.getUpdatedAt());
     }
 }
 

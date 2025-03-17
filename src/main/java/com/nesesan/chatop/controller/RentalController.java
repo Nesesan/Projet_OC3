@@ -53,8 +53,8 @@ public class RentalController {
         rental.setPrice(price);
         rental.setDescription(description);
 
-        User user = userService.findByEmail(principal.getName());
-        rental.setOwnerId(user.getId());
+       // User user = userService.findByEmail(principal.getName());
+        //rental.setOwnerId(user.getId());
 
         if (picture != null && !picture.isEmpty()) {
             String pictureUrl = cloudinaryService.uploadFile(String.valueOf((picture)));
