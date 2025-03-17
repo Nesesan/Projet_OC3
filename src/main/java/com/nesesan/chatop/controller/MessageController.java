@@ -1,5 +1,7 @@
 package com.nesesan.chatop.controller;
 
+import com.nesesan.chatop.dto.message.MessageDTO;
+import com.nesesan.chatop.dto.message.MessageResponseDTO;
 import com.nesesan.chatop.model.Message;
 import com.nesesan.chatop.service.MessageService;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +24,8 @@ public class MessageController {
     }
 
     @PostMapping
-    public ResponseEntity<Message> sendMessage(@RequestBody Message message, Principal principal) {
-        Message messageResponse = messageService.processMessage(message,principal.getName());
-        return ResponseEntity.ok(messageResponse);
+    public ResponseEntity<MessageResponseDTO> sendMessage(@RequestBody MessageDTO messageDTO, Principal principal) {
+        MessageResponseDTO responseDTO = messageService.processMessage(messageDTO, principal.getName());
+        return ResponseEntity.ok(responseDTO);
     }
 }
