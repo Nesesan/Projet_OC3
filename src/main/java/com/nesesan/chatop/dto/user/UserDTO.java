@@ -9,6 +9,20 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
+/**
+ * Data Transfer Object (DTO) for representing a User.
+ *
+ * This class is designed to encapsulate user data for API communication
+ * or business layer processes. It includes basic user information such
+ * as ID, name, email, and timestamps for tracking creation and updates.
+ *
+ * The timestamps are serialized and deserialized in "yyyy/MM/dd" format
+ * for consistent date handling in external systems or APIs.
+ *
+ * This class can be instantiated using either the primary constructor
+ * with LocalDateTime fields or an auxiliary constructor that accepts
+ * java.util.Date objects and converts them to LocalDateTime.
+ */
 @Data
 @AllArgsConstructor
 public class UserDTO {
@@ -31,3 +45,4 @@ public class UserDTO {
         this.updatedAt = updatedAt.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
     }
 }
+

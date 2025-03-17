@@ -13,8 +13,12 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * RentalController is a REST controller that provides endpoints for managing rental properties.
+ * It handles HTTP requests related to retrieving, creating, and updating rental records.
+ */
 @RestController
-@RequestMapping("/rentals")
+@RequestMapping("/api/rentals")
 public class RentalController {
 
     private final RentalService rentalService;

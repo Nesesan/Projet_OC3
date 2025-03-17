@@ -19,6 +19,16 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Service class for managing rental operations.
+ *
+ * This class provides methods to perform operations such as retrieving rentals,
+ * creating new rentals, updating existing rentals, fetching detailed rental information,
+ * and verifying ownership.
+ *
+ * It interacts with the RentalRepository for database operations, UserService for user-related
+ * operations, and CloudinaryService for handling cloud storage functionalities.
+ */
 @Service
 public class RentalService {
 

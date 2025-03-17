@@ -12,6 +12,12 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+/**
+ * Service class responsible for managing messages.
+ * It provides functionality for sending messages and processing message data.
+ * The service interacts with the MessageRepository, UserService, and RentalService
+ * to perform its operations.
+ */
 @Service
 public class MessageService {
 

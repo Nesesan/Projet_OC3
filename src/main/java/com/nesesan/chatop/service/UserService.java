@@ -14,6 +14,19 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Optional;
 
+/**
+ * Service class for managing user operations such as registration, authentication,
+ * and retrieving user details.
+ *
+ * This class implements {@link UserDetailsService}, making it suitable for use in
+ * Spring Security authentication workflows.
+ *
+ * Main functionalities include:
+ * - User registration with secure password encoding and JWT token generation.
+ * - User authentication by validating credentials and generating JWT tokens.
+ * - Fetching user details by ID or email.
+ * - Loading user details for Spring Security authentication.
+ */
 @Service
 public class UserService implements UserDetailsService {
 
