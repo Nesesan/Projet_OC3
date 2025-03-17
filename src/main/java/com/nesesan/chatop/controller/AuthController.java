@@ -1,54 +1,38 @@
 package com.nesesan.chatop.controller;
 
-import com.nesesan.chatop.model.User;
-import com.nesesan.chatop.request.LoginRequest;
-import com.nesesan.chatop.response.UserResponse;
-import com.nesesan.chatop.security.JwtUtil;
+import com.nesesan.chatop.dto.authentication.AuthenticationRequestDTO;
+import com.nesesan.chatop.dto.authentication.AuthenticationResponseDTO;
+import com.nesesan.chatop.dto.authentication.UserRegisterDTO;
+import com.nesesan.chatop.dto.user.UserDTO;
 import com.nesesan.chatop.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
-
     private final UserService userService;
-    ;
-    private final JwtUtil jwtUtil;
 
-    public AuthController(UserService userService, JwtUtil jwtUtil) {
+    public AuthController(UserService userService) {
         this.userService = userService;
-        this.jwtUtil = jwtUtil;
     }
 
-
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody User user) {
-        String token = userService.registerUser(user);
-        return ResponseEntity.ok(token);
+    public ResponseEntity<AuthenticationResponseDTO> register(@RequestBody UserRegisterDTO registerDTO) {
+        String token = userService.registerUser(registerDTO);
+        return ResponseEntity.ok(new AuthenticationResponseDTO(token));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
-        String token = userService.loginUser(loginRequest.getEmail(), loginRequest.getPassword());
-        return ResponseEntity.ok(token);
+    public ResponseEntity<AuthenticationResponseDTO> login(@RequestBody AuthenticationRequestDTO authRequestDTO) {
+        String token = userService.loginUser(authRequestDTO.getEmail(), authRequestDTO.getPassword());
+        return ResponseEntity.ok(new AuthenticationResponseDTO(token));
     }
 
     @GetMapping("/me")
-    public ResponseEntity<UserResponse> me(HttpServletRequest request) {
-        try {
-            String token = request.getHeader("Authorization");
-
-            UserResponse userResponse = userService.getUserByToken(token);
-
-            return ResponseEntity.ok(userResponse);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-        } catch (UsernameNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-    }
-}
+    public ResponseEntity<UserDTO> getCurrentUser(Principal principal) {
+        UserDTO userDTO = userService.getUserDTOByEmail(principal.getName());
+        return ResponseEntity.ok(userDTO);
+    }}
