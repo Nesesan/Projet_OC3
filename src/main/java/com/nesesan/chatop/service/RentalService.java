@@ -3,6 +3,7 @@ package com.nesesan.chatop.service;
 import com.nesesan.chatop.model.Rental;
 import com.nesesan.chatop.model.User;
 import com.nesesan.chatop.repository.RentalRepository;
+import com.nesesan.chatop.request.RentalRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -14,10 +15,12 @@ public class RentalService {
 
     private final RentalRepository rentalRepository;
     private final UserService userService;
+    private final CloudinaryService cloudinaryService;
 
-    public RentalService(RentalRepository rentalRepository, UserService userService) {
+    public RentalService(RentalRepository rentalRepository, UserService userService, CloudinaryService cloudinaryService) {
         this.rentalRepository = rentalRepository;
         this.userService = userService;
+        this.cloudinaryService = cloudinaryService;
     }
 
     public Map<String, List<Rental>> getAllRentals(){
@@ -48,21 +51,24 @@ public class RentalService {
         newRental.setUpdatedAt(newRental.getUpdatedAt());
 
         if (newRental.getPicture() != null && !newRental.getPicture().isEmpty()) {
-            String pictureUrl = "a simple picture is here";
+            String pictureUrl = cloudinaryService.uploadFile(newRental.getPicture());
             newRental.setPicture(pictureUrl);
         }
+
         return rentalRepository.save(rental);
     };
 
-    public Rental updateRental(Rental rental, String userEmail) throws Exception{
-        if (rental == null || rental.getId() == null){
-            throw new Exception("Rental not found");
-        }
-        rental.setName(rental.getName());
-        rental.setSurface(rental.getSurface());
-        rental.setPrice(rental.getPrice());
-        rental.setDescription(rental.getDescription());
-        rental.setUpdatedAt(rental.getUpdatedAt());
+
+
+    public Rental updateRental(Integer id, RentalRequest rentalRequest) throws Exception{
+       Rental rental = getRentalById(id)
+               .orElseThrow(()-> new IllegalArgumentException("Rental not found"));
+
+       rental.setName(rentalRequest.getName());
+       rental.setSurface(rentalRequest.getSurface());
+       rental.setPrice(rentalRequest.getPrice());
+       rental.setDescription(rentalRequest.getDescription());
+       rental.setUpdatedAt(rental.getUpdatedAt());
 
         return rentalRepository.save(rental);
     }
