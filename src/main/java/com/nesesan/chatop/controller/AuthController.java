@@ -10,11 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
-/**
- * AuthController handles authentication-related endpoints such as user registration, login,
- * and fetching currently authenticated user details.
- * It provides REST API endpoints for authentication and user management.
- */
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {

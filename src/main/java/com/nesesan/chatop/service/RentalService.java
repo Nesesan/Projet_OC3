@@ -9,26 +9,11 @@ import com.nesesan.chatop.model.User;
 import com.nesesan.chatop.repository.RentalRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.*;
 
-/**
- * Service class for managing rental operations.
- *
- * This class provides methods to perform operations such as retrieving rentals,
- * creating new rentals, updating existing rentals, fetching detailed rental information,
- * and verifying ownership.
- *
- * It interacts with the RentalRepository for database operations, UserService for user-related
- * operations, and CloudinaryService for handling cloud storage functionalities.
- */
+
 @Service
 public class RentalService {
 
@@ -46,17 +31,14 @@ public class RentalService {
 
     public Map<String, List<RentalResponseDTO>> getAllRentals() {
         List<RentalResponseDTO> rentals = rentalRepository.findAll().stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+                .map(rental -> convertToDTO(rental, "Rental updated successfully"))
+                .toList();
 
-        Map<String, List<RentalResponseDTO>> response = new HashMap<>();
-        response.put("rentals", rentals); // Encapsuler dans la clé "rentals"
-        return response;
+        return Collections.singletonMap("rentals", rentals);
     }
 
-    private RentalResponseDTO convertToDTO(Rental rental) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 
+    private RentalResponseDTO convertToDTO(Rental rental, String message) {
         return new RentalResponseDTO(
                 rental.getId(),
                 rental.getName(),
@@ -67,7 +49,8 @@ public class RentalService {
                 rental.getOwnerId(),
                 rental.getCreatedAt(),
                 rental.getUpdatedAt(),
-                "Rental updated successfully");
+                message
+        );
     }
 
     public Optional<Rental> getRentalById(Integer id) {
@@ -91,20 +74,7 @@ public class RentalService {
         }
 
         Rental createdRental = rentalRepository.save(rental);
-
-        return new RentalResponseDTO(
-                createdRental.getId(),
-                createdRental.getName(),
-                createdRental.getSurface(),
-                createdRental.getPrice(),
-                createdRental.getPicture(),
-                createdRental.getDescription(),
-                createdRental.getOwnerId(),
-                createdRental.getCreatedAt(),
-                createdRental.getUpdatedAt(),
-                "Rental created!"
-        );
-
+        return convertToDTO(createdRental, "Rental created!");
     }
 
     @Transactional
@@ -119,26 +89,13 @@ public class RentalService {
         rental.setUpdatedAt(LocalDateTime.now());
 
         Rental updatedRental = rentalRepository.save(rental);
-
-        return new RentalResponseDTO(
-                updatedRental.getId(),
-                updatedRental.getName(),
-                updatedRental.getSurface(),
-                updatedRental.getPrice(),
-                updatedRental.getPicture(),
-                updatedRental.getDescription(),
-                updatedRental.getOwnerId(),
-                updatedRental.getCreatedAt(),
-                updatedRental.getUpdatedAt(),
-                "Rental updated!"
-        );
+        return convertToDTO(updatedRental, "Rental updated!");
     }
 
     public RentalResponseDTO getRentalDTOById(Integer id) {
         Rental rental = getRentalById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Rental not found"));
-
-        return convertToDTO(rental);
+        return convertToDTO(rental, "Rental retrieved successfully");
     }
 
     public void verifyOwnership(Integer rentalId, String email) {
@@ -148,7 +105,7 @@ public class RentalService {
         User user = userService.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        if (!(rental.getOwnerId() == user.getId().intValue())) {
+        if (!Objects.equals(rental.getOwnerId(), Math.toIntExact(user.getId()))) {
             throw new UnauthorizedException("Vous n'êtes pas autorisé à modifier ce rental");
         }
     }

@@ -9,12 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Map;
 
-/**
- * Service class for handling Cloudinary file operations.
- * This class provides functionality to upload files to a Cloudinary cloud storage.
- * It uses the Cloudinary SDK and properties configured in the application to interact
- * with the Cloudinary API.
- */
+
 @Service
 public class CloudinaryService {
 
