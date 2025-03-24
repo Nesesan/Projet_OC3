@@ -6,12 +6,6 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-/**
- * Entity class representing a user in the system.
- * This class is mapped to the "USERS" table in the database and
- * contains basic information about a user such as id, name, email, password, and timestamps.
- * Leverages JPA annotations for ORM.
- */
 @Entity
 @Getter
 @Setter

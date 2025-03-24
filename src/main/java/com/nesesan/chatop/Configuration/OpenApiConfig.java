@@ -6,11 +6,7 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-/**
- * Configuration class for customizing the OpenAPI documentation for the API.
- * It defines the OpenAPI specification, including metadata, security schemes,
- * and other components used in the documentation.
- */
+
 @Configuration
 public class OpenApiConfig {
 

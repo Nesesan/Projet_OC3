@@ -8,10 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * UserController is a REST controller responsible for handling user-related endpoints.
- * This controller provides APIs to retrieve user information.
- */
+
 @RestController
 @RequestMapping("/api/user")
 public class UserController {

@@ -13,41 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-/**
- * WebSecurityConfig is a Spring Security configuration class that customizes
- * security settings for the application.
- *
- * This class configures authentication, session management, and endpoint access rules
- * to ensure secure communication. Additionally, it incorporates a custom JWT-based
- * authentication mechanism using the JwtAuthenticationFilter.
- *
- * Main Responsibilities:
- * - Configures HTTP security rules, such as disabling CSRF protection and setting
- *   stateless session management.
- * - Defines authorization rules for HTTP requests, permitting or restricting access
- *   to endpoints based on their roles or permissions.
- * - Integrates a JWT authentication filter into the Spring Security filter chain to
- *   validate and process authentication tokens.
- * - Provides a PasswordEncoder bean for secure password hashing and a custom
- *   AuthenticationManager for handling authentication operations.
- *
- * Key Components:
- * - JwtAuthenticationFilter: A custom filter for authenticating incoming requests based
- *   on JSON Web Tokens.
- * - PasswordEncoder: Provides an implementation of BCryptPasswordEncoder for encoding
- *   and validating passwords.
- *
- * Configuration Details:
- * - CSRF protection is disabled for stateless authentication.
- * - Publicly accessible routes include API documentation endpoints as well as
- *   authentication-specific endpoints such as register and login.
- * - All other endpoints require authenticated access.
- *
- * Usage:
- * This class is typically included as part of the application's Spring Security setup
- * and is used to enforce security best practices in conjunction with the JwtAuthenticationFilter
- * and JwtUtil.
- */
+
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
